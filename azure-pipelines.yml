@@ -1,0 +1,120 @@
+trigger:
+  - feature-FlorencioMaturana-interfaz
+
+pool: Azure Pipelines
+
+jobs:
+- job: build
+  displayName: 'Build'
+  steps:
+  - task: Gradle@3
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      tasks: 'build'
+      publishJUnitResults: true
+      testResultsFiles: '**/TEST-*.xml'
+      javaHomeOption: 'JDKVersion'
+      sonarQubeRunAnalysis: false
+      spotBugsAnalysis: false
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: |
+          **/build/libs/spring-petclinic-*.jar
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: appJar
+      publishLocation: 'Container'
+
+- job: sonar
+  workspace:
+    clean: all
+  displayName:  Code Review
+  steps:
+  - task: SonarCloudPrepare@1
+    displayName: 'Preparing Sonarqube Environment'
+    inputs:
+      SonarCloud: 'Sonarcloud'
+      organization: 'devos-final-lab'
+      scannerMode: 'MSBuild'
+      projectKey: 'Devos-Final-Lab_spring-clinic'
+      projectName: 'spring-clinic'
+
+  - task: Gradle@3
+    displayName: 'Analyze current Branch'
+    inputs:
+      gradleWrapperFile: 'gradlew'
+      tasks: "sonarqube"
+      javaHomeOption: 'JDKVersion'
+      sonarQubeRunAnalysis: true
+      sqGradlePluginVersionChoice: 'specify'
+      sonarQubeGradlePluginVersion: '3.3'
+         
+  - task: SonarCloudPublish@1
+    displayName: 'Publish Analysis Results'
+    inputs:
+      pollingTimeoutSec: '300'
+
+- job: buildimage
+  displayName: Build Image
+  dependsOn: build
+  steps:
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'appJar'
+        downloadPath: '$(Pipeline.Workspace)'
+
+    - script: "mkdir -p build/libs; mv $(Pipeline.Workspace)/appJar/build/libs/ build/; chmod -R 555 build/libs"
+      displayName:  Se mueve jar a carpeta raiz
+
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'Docker-registry'
+        command: 'login'
+
+    - task: Docker@2
+      inputs:
+        repository: 'fmaturana/servicio-spring-clinic'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+
+- job: Deploy
+  dependsOn: buildimage
+  steps:
+    - task: Kubernetes@1
+      displayName:  Autenticacion cluster kubernetes
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'PlanPayAsYouGo(abd440fd-c056-4591-844d-c0f19bd075d6)'
+        azureResourceGroup: 'k8s-mygroup'
+        kubernetesCluster: 'k8s-mycluster'
+        useClusterAdmin: true
+        command: 'login'
+    - task: KubernetesManifest@0
+      displayName:  Integracion k8s y docker registry
+      inputs:
+        action: 'createSecret'
+        kubernetesServiceConnection: 'k8s-serviceConnection-2'
+        namespace: 'default'
+        secretType: 'dockerRegistry'
+        secretName: 'az-k8s-secret'
+        dockerRegistryEndpoint: 'Docker-registry'
+
+    - task: Kubernetes@1
+      displayName: Despliegue en cluster
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: 'PlanPayAsYouGo(abd440fd-c056-4591-844d-c0f19bd075d6)'
+        azureResourceGroup: 'k8s-mygroup'
+        kubernetesCluster: 'k8s-mycluster'
+        useClusterAdmin: true
+        command: 'apply'
+        arguments: '-f kubernetes/kubernetes.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+
