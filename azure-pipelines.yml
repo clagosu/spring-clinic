@@ -42,6 +42,20 @@ jobs:
       scannerMode: 'MSBuild'
       projectKey: 'Devos-Final-Lab_spring-clinic'
       projectName: 'spring-clinic'
+      extraProperties: |
+        sonar.verbose=true
+        sonar.log.level=TRACE
+        sonar.sources=.
+        sonar.java.source=11
+        sonar.inclusions=**/pom.xml,**/src/main/**/*
+        sonar.java.binaries=build/classes
+        sonar.branch.name=feature-FlorencioMaturana-interfaz
+        sonar.coverage.exclusions=**/*
+        sonar.sourceEncoding=UTF-8
+        sonar.exclusions=**/*.cs,**/*.c,**/*.h,**/*.cc,**/*.cpp,**/*.cxx,**/*.c++,**/*.hh,**/*.hpp,**/*.hxx,**/*.h++,**/*.ipp,**/*.m,**/*.sql,**/*.tab,**/*.pkb,**/*.vb
+        sonar.test.exclusions=**/*.cs,**/*.c,**/*.h,**/*.cc,**/*.cpp,**/*.cxx,**/*.c++,**/*.hh,**/*.hpp,**/*.hxx,**/*.h++,**/*.ipp,**/*.m,**/*.sql,**/*.tab,**/*.pkb,**/*.vb
+        sonar.test.inclusions=**/src/test/**/*
+        sonar.tests=.
 
   - task: Gradle@3
     displayName: 'Analyze current Branch'
