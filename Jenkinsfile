@@ -1,16 +1,27 @@
-node {
-    stage('Build'){
-        checkout scm
-        sh "chmod 777 gradlew"
-        sh "./gradlew build"
-    }
-    stage('Test'){
-        sh "./gradlew clean test"
-    }
-    stage('SonarQube analysis') {
+pipeline {
+    agent any
+    stages {
+        stage('SCM'){
             steps {
-                withSonarQubeEnv('sonarQubePruebas') {
-                    sh './gradlew sonarqube'
+                checkout scm
+            }
+        }
+        stage('Build'){
+            steps {
+                sh "chmod 777 gradlew"
+                sh "./gradlew build"
+            }
+        }
+        stage('Test'){
+            steps {
+                sh "./gradlew clean test"
+            }
+        }
+        stage('SonarQube analysis') {
+                steps {
+                    withSonarQubeEnv('sonarqube') {
+                        sh "./gradlew sonarqube"
+                    }
                 }
             }
     }
