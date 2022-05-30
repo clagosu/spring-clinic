@@ -24,6 +24,6 @@ node {
 
   stage('Image Build') {
       sh 'docker build .'
-      sh 'docker push'
+      sh 'docker push docker push gfernandeznunez/lab-spring-clinic'
   }
 }
