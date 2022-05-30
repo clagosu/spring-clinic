@@ -9,7 +9,7 @@ pipeline {
         stage('Build'){
             steps {
                 sh "chmod 777 gradlew"
-                sh "./gradlew build"
+                sh './gradlew build --scan -s'
             }
         }
         stage('Test'){
