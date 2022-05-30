@@ -27,7 +27,9 @@ pipeline {
           }
 
         stage('Test'){
-            sh "./gradlew clean test"
+            steps{
+                sh "./gradlew clean test"
+            }
         }
 
         stage('Sonarqube') {
