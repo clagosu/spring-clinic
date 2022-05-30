@@ -12,6 +12,7 @@
 */
 
 node {
+    env.SONAR_TOKEN = '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'
     stage('Git') {
         checkout scm
     }
