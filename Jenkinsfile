@@ -1,4 +1,5 @@
 node {
+  env.SONAR_TOKEN='d00b6c50cb81f6cd8c86fe2e200d7c20fa2c1254'
   stage('Build'){
     checkout scm
     sh "chmod 777 gradlew"
