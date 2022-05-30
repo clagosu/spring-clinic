@@ -1,5 +1,4 @@
-
-pipeline {
+ pipeline {
   agent any
   stages {
     stage('SCM'){
@@ -18,12 +17,23 @@ pipeline {
         sh "./gradlew clean test"
       }
     }
-    stage('SonarQube analysis') {
+    stage('Sonarqube'){
+            steps{
+                figlet 'SonarQube'
+                script{
+                    def scannerHome = tool 'sonarqube'
+                    
+                    withSonarQubeEnv('sonarqube'){
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.login=admin -Dsonar.password=nokias82 -Dsonar.projectKey=gradlew -Dsonar.java.binaries=. -Dsonar.exclusions='**/*/test/**/*, **/*/acceptance-test/**/*, **/*.html'"
+                    }
+                }
+            }
+    }
+    stage('Deploy') {
+      agent any
       steps {
-        withSonarQubeEnv('sonarqube') {
-          sh "./gradlew sonarqube"
-        }
+        sh 'docker build -t invazhor/spring-clinic:latest .'
       }
     }
   }
-}
+} 
