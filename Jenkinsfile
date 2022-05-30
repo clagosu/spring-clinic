@@ -1,4 +1,4 @@
-/*node {
+node {
   stage('Build'){
     checkout scm
     sh "chmod 777 gradlew"
@@ -9,8 +9,8 @@
   sh "./gradlew clean test"
   }
 }
-*/
 
+/*
 node {
     stage('Git') {
         checkout scm
@@ -37,3 +37,4 @@ node {
     //    sh 'gradle docker'
     //}
 }
+*/
