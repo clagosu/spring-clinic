@@ -19,11 +19,9 @@ node {
   }
 
   stage('Image Build') {
-    steps {
-        withDockerRegistry(credentialsId: 'gfernandeznunez:66f36f48-3ae2-4950-b3ab-bd7db187caea', url: 'https://hub.docker.com') {
-            sh 'docker build .'
-            sh 'docker push'
-        }
-    }
+      withDockerRegistry(credentialsId: 'gfernandeznunez:66f36f48-3ae2-4950-b3ab-bd7db187caea', url: 'https://hub.docker.com') {
+          sh 'docker build .'
+          sh 'docker push'
+      }
   }
 }
