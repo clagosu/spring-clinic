@@ -32,8 +32,8 @@ node {
     //        sh 'docker push'
     //    }
     //}
-    
-    stage('Docker'){
-        sh 'gradle docker'
-    }
+
+    //stage('Docker'){
+    //    sh 'gradle docker'
+    //}
 }
