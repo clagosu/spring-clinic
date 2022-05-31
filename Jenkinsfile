@@ -27,7 +27,7 @@ node {
       env.PATH = "${dockerHome}/bin:${env.PATH}"
       sh 'docker build -t gfernandeznunez/lab-spring-clinic .'
       //sh 'docker push gfernandeznunez/lab-spring-clinic'
-      docker.withRegistry("https://gcr.io", "gcr:google-container-registry") {
+      docker.withRegistry("https://hub.docker.com", "docker") {
         //bat "docker push gfernandeznunez/lab-spring-clinic"
         sh "docker push gfernandeznunez/lab-spring-clinic"
       }
