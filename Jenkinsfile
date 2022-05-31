@@ -1,10 +1,10 @@
 node {
   env.SONAR_TOKEN='d00b6c50cb81f6cd8c86fe2e200d7c20fa2c1254'
-/*
+
   environment  {
     dockerhub=credentials('dockerhub')
   }
-*/
+
   stage('Git'){
     checkout scm
   }
@@ -23,8 +23,8 @@ node {
   }
 
   stage('Image Build') {
-      //def dockerHome = tool 'docker'
-      //env.PATH = "${dockerHome}/bin:${env.PATH}"
+      def dockerHome = tool 'docker'
+      env.PATH = "${dockerHome}/bin:${env.PATH}"
       sh 'docker build -t gfernandeznunez/lab-spring-clinic'
       sh 'docker push docker push gfernandeznunez/lab-spring-clinic'
   }
