@@ -15,15 +15,23 @@ node {
   }
 
   stage('Code Review') {
-      sh "set +x; ./gradlew sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.branch.name=feature-gonzaloFernandez-interfaz"
+    sh "set +x; ./gradlew sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.branch.name=feature-gonzaloFernandez-interfaz"
   }
 
   stage('Deploy') {
-      def dockerHome = tool 'docker'
-      env.PATH = "${dockerHome}/bin:${env.PATH}"
+    def dockerHome = tool 'docker'
+    env.PATH = "${dockerHome}/bin:${env.PATH}"
+    boolean buildOK = true
+    try{
+      sh 'docker build -t gfernandeznunez/lab-spring-clinic .'
+    } catch{
+      buildOK = false;
+    }
+
+    if(buildOK){
       docker.withRegistry("https://hub.docker.com", "docker") {
-        sh 'docker build -t gfernandeznunez/lab-spring-clinic .'
         sh "docker push gfernandeznunez/lab-spring-clinic"
       }
+    }
   }
 }
