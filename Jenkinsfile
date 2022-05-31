@@ -1,8 +1,6 @@
 node {
   env.SONAR_TOKEN=credentials('sonar')
 
-  tools {dockerTool  "docker" } 
-
   stage('Checkout'){
     checkout scm
   }
