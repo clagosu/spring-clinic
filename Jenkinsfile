@@ -2,7 +2,7 @@ node {
   //env.SONAR_TOKEN=credentials('sonar')
 
   environment {
-    SONAR_TOKEN = credentials('sonar')
+    SONAR_TOKEN = "${params.sonar}"
   }
 
   stage('Checkout'){
