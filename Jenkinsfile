@@ -24,7 +24,7 @@ node {
     boolean buildOK = true
     try{
       sh 'docker build -t gfernandeznunez/lab-spring-clinic .'
-    } catch{
+    } catch (Exception e){
       buildOK = false;
     }
 
