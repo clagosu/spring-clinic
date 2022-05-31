@@ -5,7 +5,7 @@ node {
   //  dockerhub=credentials('dockerhub')
   //}
 
-  stage('Git'){
+  stage('Checkout'){
     checkout scm
   }
 
@@ -18,11 +18,11 @@ node {
     sh "./gradlew clean test"
   }
 
-  stage('Sonarqube') {
+  stage('Code Review') {
       sh "set +x; ./gradlew sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.branch.name=feature-gonzaloFernandez-interfaz"
   }
 
-  stage('Image Build') {
+  stage('Deploy') {
       //def dockerHome = tool 'docker'
       //env.PATH = "${dockerHome}/bin:${env.PATH}"
       sh 'docker build -t gfernandeznunez/lab-spring-clinic .'
