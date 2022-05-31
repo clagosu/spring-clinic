@@ -1,5 +1,5 @@
 node {
-  env.SONAR_TOKEN=credentials('sonar')
+  //env.SONAR_TOKEN=credentials('sonar')
 
   stage('Checkout'){
     checkout scm
@@ -15,7 +15,7 @@ node {
   }
 
   stage('Code Review') {
-      sh "set +x; ./gradlew sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.branch.name=feature-gonzaloFernandez-interfaz"
+      sh "set +x; ./gradlew sonarqube -Dsonar.login=${sonar} -Dsonar.branch.name=feature-gonzaloFernandez-interfaz"
   }
 
   stage('Deploy') {
