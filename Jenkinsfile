@@ -25,7 +25,7 @@ node {
   stage('Image Build') {
       def dockerHome = tool 'docker'
       env.PATH = "${dockerHome}/bin:${env.PATH}"
-      sh 'docker build .'
+      sh 'docker build -t gfernandeznunez/lab-spring-clinic'
       sh 'docker push docker push gfernandeznunez/lab-spring-clinic'
   }
 }
