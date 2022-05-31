@@ -28,7 +28,8 @@ node {
       sh 'docker build -t gfernandeznunez/lab-spring-clinic .'
       //sh 'docker push gfernandeznunez/lab-spring-clinic'
       docker.withRegistry('', 'docker-hub-credentials') {
-        bat "docker push gfernandeznunez/lab-spring-clinic"
+        //bat "docker push gfernandeznunez/lab-spring-clinic"
+        sh "docker push gfernandeznunez/lab-spring-clinic"
       }
   }
 }
