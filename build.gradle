@@ -43,6 +43,7 @@ sonarqube {
     property "sonar.organization", "devops-foundation"
     property "sonar.host.url", "https://sonarcloud.io"
     property "sonar.branch.name" ,"feature-sebastianSepulveda-interfaz"
+    property "sonar.login", "86c0d131dc7cd6603cf19ae84d3a46897c092787"
   }
 }
 
