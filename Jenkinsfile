@@ -22,7 +22,7 @@ pipeline {
         
       stage('Code Quality') {
             steps {
-                sh "set +x; ./gradlew sonarqube -Dsonar.login=${SonarPAT} -Dsonar.branch.name=feature-jenkins"
+                sh "set -x; ./gradlew sonarqube -Dsonar.login=${SonarPAT} -Dsonar.branch.name=feature-jenkins"
                 echo "$DOCKER"
                 echo "$currentBuild.number"
                 echo "$sonarPAT"
