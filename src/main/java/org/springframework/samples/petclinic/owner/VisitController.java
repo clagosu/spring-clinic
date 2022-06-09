@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 class VisitController {
 
 	private final OwnerRepository owners;
+	private final String password;
 
 	public VisitController(OwnerRepository owners) {
 		this.owners = owners;
