@@ -23,7 +23,7 @@ pipeline {
       stage('Code Quality') {
             steps {
                 withCredentials([string(credentialsId: 'sonarcloud', variable: 'SONARPAT')]) {
-                sh "set -x; ./gradlew sonarqube -Dsonar.login=${SONARPAT} -Dsonar.branch.name=feature-jenkins"
+                sh "set -x; ./gradlew sonarqube -Dsonar.login=$SONARPAT -Dsonar.branch.name=feature-jenkins"
                 }
                 //sh "set -x; ./gradlew sonarqube -Dsonar.login=${SonarPAT} -Dsonar.branch.name=feature-jenkins"
                 echo "$DOCKER"
