@@ -1,29 +1,33 @@
 
 pipeline {
-  agent any
-  stages {
-    stage('SCM'){
-      steps {
-        checkout scm
-      }
-    }
-    stage('Build'){
-      steps {
-        sh "chmod 777 gradlew"
-        sh './gradlew build --scan -s'
-      }
-    }
-    stage('Test'){
-      steps {
-        sh "./gradlew clean test"
-      }
-    }
-    stage('SonarQube analysis') {
-      steps {
-        withSonarQubeEnv('sonarqube') {
-          sh "./gradlew sonarqube"
+    agent any 
+    stages {
+        stage('Git') {
+            steps {
+                checkout scm 
+                //checkout([$class: 'GitSCM', branches: [[name: '*/feature-deploy']], extensions: [], userRemoteConfigs: [[credentialsId: 'clagosu', url: 'https://github.com/Devops-Foundation/microservicio-spring.git']]])
+            }
+          }
+        stage('Build') {
+            steps {
+                sh 'chmod 777 gradlew'
+                //sh './gradlew clean build'
+                //archiveArtifacts artifacts: "build/libs/testing-web-*.jar"
+            }
+          }
+      stage('Code Quality') {
+            steps {
+                //sh "set +x; ./gradlew sonarqube -Dsonar.login=${SONAR_TOKEN} -Dsonar.branch.name=feature-deploy"
+                echo 'Hello'
+            }
         }
-      }
+        stage('Image Build') {
+            steps {
+                //withDockerRegistry(credentialsId: 'docker', url: 'https://hub.docker.com') {
+                    sh 'docker build .'
+                    sh 'docker images'
+                //}
+            }
+        }
     }
-  }
 }
